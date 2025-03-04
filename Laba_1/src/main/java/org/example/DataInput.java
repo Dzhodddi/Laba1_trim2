@@ -65,6 +65,13 @@ public final class DataInput {
         }
 
     }
-
+	
+	public static String validateString(String str, int minimalLen) {
+		if (str.length() < minimalLen ) {
+			System.out.println("Wrong input, name contains atleast 4 chars");
+			throw new IllegalArgumentException();
+		}
+		return str;
+	}
 
 }
