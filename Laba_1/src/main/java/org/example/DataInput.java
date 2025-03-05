@@ -73,5 +73,12 @@ public final class DataInput {
 		}
 		return str;
 	}
-
+	
+	public static int validateNumber(int number, int lower, int higher) {
+		if (number < lower || number > higher) {
+			System.out.println("Number is out of bounds");
+			throw new IllegalArgumentException();
+		}
+		return number;
+	}
 }
