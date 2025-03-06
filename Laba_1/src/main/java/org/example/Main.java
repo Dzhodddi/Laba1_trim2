@@ -33,7 +33,7 @@ class Professor extends Human{
 	private  String [] groups;
 	private  String [] students;
 	Professor(String name, String surname, String middlename, int age, String cathedra, String Faculty) {
-		super(name, surname, middlename, age, "Proffesor");
+		super(name, surname, middlename, age, "Professor");
 		this.cathedra = cathedra;
 		this.faculty = faculty;
 
