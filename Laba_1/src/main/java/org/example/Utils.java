@@ -24,14 +24,14 @@ public class Utils {
         return 1;
     }
 
-	   public static Human[] quickSortByName(Human[] a, int beginIndex, int endIndex ){
+    public static Human[] quickSortByName(Human[] a, int beginIndex, int endIndex ){
         if (beginIndex < endIndex) {
             int dividingIndex = getDividingIndexString(a, beginIndex, endIndex);
             quickSortByName(a, beginIndex, dividingIndex - 1);
             quickSortByName(a, dividingIndex + 1, endIndex);
         }
         return a;
-    }
+     }
 
 	private static int getDividingIndexString(Human [] a, int beginIndex, int endIndex) {
         String key = a[endIndex].getName();
@@ -54,4 +54,31 @@ public class Utils {
 
 	}
 
+    private static void swapStudents(Student [] a, int i, int j) {
+         Student temp = a[i];
+         a[i] = a[j];
+         a[j] = temp;
+    }
+
+    private static int getDividingIndexInt(Student [] a, int beginIndex, int endIndex) {
+        int key = a[endIndex].getYear();
+        int i = beginIndex - 1;
+        for (int j = beginIndex; j < endIndex; j++) {
+            if (a[j].getYear() < key) {
+                i++;
+                swapStudents(a, i, j);
+            }
+        }
+        swapStudents(a, i + 1, endIndex);
+        return i + 1;
+    }
+
+    public static Student[] quickSortByYear(Student[] a, int beginIndex, int endIndex ){
+        if (beginIndex < endIndex) {
+            int dividingIndex = getDividingIndexInt(a, beginIndex, endIndex);
+            quickSortByYear(a, beginIndex, dividingIndex - 1);
+            quickSortByYear(a, dividingIndex + 1, endIndex);
+        }
+        return a;
+    }
 }
