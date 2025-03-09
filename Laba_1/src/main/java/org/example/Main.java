@@ -64,26 +64,84 @@ class Professor extends Human{
 
 }
 
-class Student extends Human {
-	private String name;
-	// TO-DO variables
+class Student extends Human{
+
 	private int year;
 	private int group;
-	Student(String name, String surname, String middlename, int age, int year) {
+	private String cathedra;
+	private String faculty;
+
+	Student(String name, String surname, String middlename, int age, int year, int group, String cathedra, String faculty) {
 		super(name, surname, middlename, age, "Student");
 		this.year = year;
+		this.group = group;
+		this.cathedra = cathedra;
+		this.faculty = faculty;
 	}
 
 	public int getYear() {
 		return year;
 	}
 
+	public void setYear(int year){
+		//bachelor
+		this.year = Math.max(0, Math.min(4, year));
+	}
+
 	public int getGroup() {
 		return group;
 	}
 
-}
+	public void setGroup(int group){
+		this.group = Math.max(0, Math.min(10, group));;
+	}
 
+	public String getFaculty(){
+		return faculty;
+	}
+
+	public void setFaculty(String faculty){
+		this.faculty = faculty;
+	}
+
+	public String getCathedra(){
+		return cathedra;
+	}
+
+	public void setCathedra(String cathedra){
+		this.cathedra = cathedra;
+	}
+}
+//--------------------------------------------------------------
+// в класі University
+//
+//private static int size = 1;
+//
+//private String[] employance = new String[1];
+//private Faculty[] faculty = new Faculty[1];
+//private Cathedra[] cathedra = new Cathedra[1];
+//private ...
+//+get/set
+//
+//employance задається з main
+//
+/*public void setData(String employance, String faculty, String cathedra, int year, int group, String name, String sname, String mname){
+//
+	tempEmp = Arrays.copyOf(this.employance, this.employance.length+1);
+	setEmployance(tempEmp);
+	tempFaculty = Arrays.copyOf(this.faculty, this.faculty.length+1);
+	setFaculty(tempFaculty);
+//
+	...6 times
+//
+	this.employance[size-1] = employance;
+	this.faculty[size-1] = faculty;
+	this.cathedra[size-1] = cathedra;
+	...5 times
+//
+	size++
+}*/
+//--------------------------------------------------------------
 class Cathedra {
 	private String name;
 	private Professor [] professors;
@@ -162,6 +220,8 @@ class Cathedra {
 //		return counter;
 //	}
 //}
+
+
 
 //class University {
 //	private String name;
