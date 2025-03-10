@@ -1,4 +1,19 @@
 package org.example;
+/*
+
+    Створити/видалити/редагувати факультет.
+    Створити/видалити/редагувати кафедру факультета.
+    Додати/видалити/редагувати студента/викладача до кафедри.
+    Знайти студента/викладача за ПІБ, курсом або групою.
+    Вивести всіх студентів впорядкованих за курсами.
+    Вивести всіх студентів/викладачів факультета впорядкованих за алфавітом.
+    Вивести всіх студентів кафедри впорядкованих за курсами. (done, need test)
+    Вивести всіх студентів/викладачів кафедри впорядкованих за алфавітом. (done for stuudents, need test)
+	Вивести всіх студентів кафедри вказаного курсу. (done, need test)
+    Вивести всіх студентів кафедри вказаного курсу впорядкованих за алфавітом. (done, need test)
+
+
+*/
 
 class Human {
 	private String name;
@@ -142,20 +157,67 @@ class Student extends Human{
 	size++
 }*/
 //--------------------------------------------------------------
+	
 class Cathedra {
 	private String name;
 	private Professor [] professors;
 	private Student [] students;
-	Cathedra(String name) {
+	Cathedra(String name, Student [] students , Professor [] professors  ) {
 		this.name = name;
+		this.students = students.clone();
+		this.professors = professors.clone();
+	}
+
+	public void addStudents(Student [] addedStudents) {
+		Student [] oldStudents = students.clone();
+		Student [] studentsNew = new Student[oldStudents.length + addedStudents.length];
+		System.arraycopy(oldStudents, 0, studentsNew, 0, oldStudents.length);
+
+		System.arraycopy(addedStudents, 0 , studentsNew, oldStudents.length , addedStudents.length);
+		for (Student student : studentsNew) {
+			System.out.println(student);
+		}
+		students = studentsNew.clone();
 	}
 
 	public void orderedStudentsAlphabetically() {
-		Student [] orderedStudents = (Student[]) Utils.quickSortByName(students, 0, students.length - 1);
-		System.out.print("Ordered students alphabetically: ");
-		for (Student student : students) {
+		Student [] orderedStudents = (Student[]) Utils.quickSortByName(students.clone(), 0, students.length - 1);
+		System.out.println("Ordered students alphabetically: ");
+		for (Student student : orderedStudents) {
 			System.out.println(student);
 		}
+	}
+
+	public void orderedStudentsByYear() {
+		Student [] orderedStudents = Utils.quickSortByYear(students.clone(), 0, students.length - 1);
+		System.out.println("Ordered students by year: ");
+		for (Student student : orderedStudents) {
+			System.out.println(student);
+		}
+	}
+
+
+	public void selectStudentsByYear(int year) {
+		int counter = 0;
+		for (Student student : students) {
+			if (student.getYear() == year) {
+				System.out.println(student);
+				counter++;
+			}
+		}
+	}
+
+	public void orderedStudentsAlphabeticallyInSelectedYear(int year) {
+		Student [] orderedStudents = (Student[]) Utils.quickSortByName(students.clone(), 0, students.length - 1);
+		System.out.println("Ordered students by name with year " + year + " alphabetically: ");
+		for (Student student : orderedStudents) {
+			if (student.getYear() == year) {
+				System.out.println(student);
+			}
+		}
+	}
+	public Student [] getStudents() {
+		return students;
 	}
 
 	public void orderedProfessorsAlphabetically() {
@@ -166,34 +228,7 @@ class Cathedra {
 		}
 	}
 
-	public Student [] selectStudentsByYear(int year) {
 
-		int counter = 0;
-//		System.out.print("Students that student in year " + year + " : ");
-		for (Student student : students) {
-			if (student.getYear() == year) {
-				System.out.println(student);
-				counter++;
-			}
-		}
-		Student [] selectStudentsByYear = new Student[counter];
-		counter = 0;
-        for (Student student : students) {
-            if (student.getYear() == year) {
-                selectStudentsByYear[counter] = student;
-                counter++;
-            }
-        }
-		return selectStudentsByYear;
-	}
-
-	public void orderedStudentsAlphabeticallyInSelectedYear(int year) {
-		Student [] orderedStudents = (Student[]) Utils.quickSortByName(selectStudentsByYear(year), 0, students.length - 1);
-		System.out.print("Ordered students by name with year " + year + " alphabetically: ");
-		for (Student student : students) {
-			System.out.println(student);
-		}
-	}
 
 	public int amountOfStudents() {
 		return students.length;
