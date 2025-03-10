@@ -8,7 +8,7 @@ package org.example;
     Вивести всіх студентів впорядкованих за курсами.
     Вивести всіх студентів/викладачів факультета впорядкованих за алфавітом.
     Вивести всіх студентів кафедри впорядкованих за курсами. (done, need test)
-    Вивести всіх студентів/викладачів кафедри впорядкованих за алфавітом. (done for stuudents, need test)
+    Вивести всіх студентів/викладачів кафедри впорядкованих за алфавітом. (done, need test)
 	Вивести всіх студентів кафедри вказаного курсу. (done, need test)
     Вивести всіх студентів кафедри вказаного курсу впорядкованих за алфавітом. (done, need test)
 
@@ -52,8 +52,6 @@ class Human {
 class Professor extends Human{
 	private String cathedra;
 	private String faculty;
-	private  String [] groups;
-	private  String [] students;
 	Professor(String name, String surname, String middlename, int age, String cathedra, String faculty) {
 		super(name, surname, middlename, age, "Professor");
 		this.cathedra = cathedra;
@@ -73,9 +71,6 @@ class Professor extends Human{
 		return cathedra;
 	}
 
-	private void addStudents(Student [] students) {
-
-	}
 
 }
 
@@ -100,7 +95,7 @@ class Student extends Human{
 
 	public void setYear(int year){
 		//bachelor
-		this.year = Math.max(0, Math.min(4, year));
+		this.year = year; // validation will be on the input side, not set side
 	}
 
 	public int getGroup() {
@@ -108,7 +103,7 @@ class Student extends Human{
 	}
 
 	public void setGroup(int group){
-		this.group = Math.max(0, Math.min(10, group));;
+		this.group = group;
 	}
 
 	public String getFaculty(){
@@ -125,6 +120,10 @@ class Student extends Human{
 
 	public void setCathedra(String cathedra){
 		this.cathedra = cathedra;
+	}
+
+	public String toString(){
+		return super.toString() + ". I'm studying at " + cathedra + " at cathedra " + cathedra + " on " + year + " year.";
 	}
 }
 //--------------------------------------------------------------
@@ -168,41 +167,40 @@ class Cathedra {
 		this.professors = professors.clone();
 	}
 
-	public void addStudents(Student [] addedStudents) {
-		Student [] oldStudents = students.clone();
-		Student [] studentsNew = new Student[oldStudents.length + addedStudents.length];
-		System.arraycopy(oldStudents, 0, studentsNew, 0, oldStudents.length);
+	public String toString() {
+		return "This is " + name +" cathedra";
+	}
 
-		System.arraycopy(addedStudents, 0 , studentsNew, oldStudents.length , addedStudents.length);
-		for (Student student : studentsNew) {
-			System.out.println(student);
-		}
-		students = studentsNew.clone();
+	public void addStudent(Student addedStudent) {
+		students = (appendStudent(students, addedStudent)).clone();
+	}
+
+	public void addProfessor(Professor addedProfessor) {
+		professors = (appendProfessor(professors, addedProfessor)).clone();
+	}
+
+	public void printHuman(Human [] people) {
+		for (Human human: people)
+			System.out.println(human);
 	}
 
 	public void orderedStudentsAlphabetically() {
-		Student [] orderedStudents = (Student[]) Utils.quickSortByName(students.clone(), 0, students.length - 1);
+		Human [] orderedStudents = Utils.quickSortByName(students.clone(), 0, students.length - 1);
 		System.out.println("Ordered students alphabetically: ");
-		for (Student student : orderedStudents) {
-			System.out.println(student);
-		}
+		printHuman(orderedStudents);
 	}
 
 	public void orderedStudentsByYear() {
 		Student [] orderedStudents = Utils.quickSortByYear(students.clone(), 0, students.length - 1);
 		System.out.println("Ordered students by year: ");
-		for (Student student : orderedStudents) {
-			System.out.println(student);
-		}
+		printHuman(orderedStudents);
 	}
 
 
 	public void selectStudentsByYear(int year) {
-		int counter = 0;
 		for (Student student : students) {
 			if (student.getYear() == year) {
 				System.out.println(student);
-				counter++;
 			}
 		}
 	}
@@ -216,23 +214,39 @@ class Cathedra {
 			}
 		}
 	}
+
+	public void orderedProfessorsAlphabetically() {
+		Human [] orderedProfessors = Utils.quickSortByName(professors.clone(), 0, professors.length - 1);
+		System.out.println("Ordered professors alphabetically: ");
+		printHuman(orderedProfessors);
+	}
+
 	public Student [] getStudents() {
 		return students;
 	}
 
-	public void orderedProfessorsAlphabetically() {
-		Professor [] orderedProfessors = (Professor[]) Utils.quickSortByName(professors, 0, professors.length - 1);
-		System.out.print("Ordered professors alphabetically: ");
-		for (Professor professor : professors) {
-			System.out.println(professor);
-		}
-	}
-
-
-
 	public int amountOfStudents() {
 		return students.length;
 	}
+
+	public Professor [] getProfessors() { return professors; }
+
+	public int amountOfProfessors() {return  professors.length; }
+
+	private Student [] appendStudent( Student [] students ,Student student) {
+		Student [] newStudents = new Student[students.length + 1];
+		System.arraycopy(students, 0, newStudents, 0, students.length);
+		newStudents[students.length] = student;
+		return newStudents;
+	}
+
+	private Professor [] appendProfessor( Professor [] professors ,Professor professor) {
+		Professor [] newProfessor = new Professor[professors.length + 1];
+		System.arraycopy(professors, 0, newProfessor, 0, professors.length);
+		newProfessor[professors.length] = professor;
+		return newProfessor;
+	}
+
 }
 
 
