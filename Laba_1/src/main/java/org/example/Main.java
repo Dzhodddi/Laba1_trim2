@@ -3,7 +3,7 @@ package org.example;
 
     Створити/видалити/редагувати факультет.
     Створити/видалити/редагувати кафедру факультета.
-    Додати/видалити/редагувати студента/викладача до кафедри.
+    Додати/видалити/редагувати студента/викладача до кафедри. (done, need test)
     Знайти студента/викладача за ПІБ, курсом або групою.
     Вивести всіх студентів впорядкованих за курсами.
     Вивести всіх студентів/викладачів факультета впорядкованих за алфавітом.
@@ -172,11 +172,47 @@ class Cathedra {
 	}
 
 	public void addStudent(Student addedStudent) {
-		students = (appendStudent(students, addedStudent)).clone();
+		students = (appendStudent(addedStudent)).clone();
 	}
 
 	public void addProfessor(Professor addedProfessor) {
-		professors = (appendProfessor(professors, addedProfessor)).clone();
+		professors = (appendProfessor(addedProfessor)).clone();
+	}
+
+	public void deletedProfessor(String name) {
+		int index =  getIndexOfSearchedHumanByName(professors, name);
+		if (index == -1) {
+			System.out.println("Professor with this name doesn't exits");
+			return ;
+		}
+		professors = deleteProfessor(index).clone();
+	}
+
+	public void deletedStudents(String name) {
+		int index =  getIndexOfSearchedHumanByName(students, name);
+		if (index == -1) {
+			System.out.println("Student with this name doesn't exits");
+			return ;
+		}
+		students = deleteStudent(index).clone();
+	}
+
+	public void editedStudent(String name, Student student) {
+		int index = getIndexOfSearchedHumanByName(students, name);
+		if (index == -1) {
+			System.out.println("Student with this name doesn't exits");
+			return;
+		}
+		students = editStudent(index, student).clone();
+	}
+
+	public void editedProfessor(String name, Professor professor) {
+		int index = getIndexOfSearchedHumanByName(professors, name);
+		if (index == -1) {
+			System.out.println("Student with this name doesn't exits");
+			return;
+		}
+		professors = editProfessor(index, professor).clone();
 	}
 
 	public void printHuman(Human [] people) {
@@ -195,7 +231,6 @@ class Cathedra {
 		System.out.println("Ordered students by year: ");
 		printHuman(orderedStudents);
 	}
-
 
 	public void selectStudentsByYear(int year) {
 		for (Student student : students) {
@@ -233,18 +268,52 @@ class Cathedra {
 
 	public int amountOfProfessors() {return  professors.length; }
 
-	private Student [] appendStudent( Student [] students ,Student student) {
+	private Student [] appendStudent(Student student) {
 		Student [] newStudents = new Student[students.length + 1];
 		System.arraycopy(students, 0, newStudents, 0, students.length);
 		newStudents[students.length] = student;
 		return newStudents;
 	}
 
-	private Professor [] appendProfessor( Professor [] professors ,Professor professor) {
+	private Professor [] appendProfessor(Professor professor) {
 		Professor [] newProfessor = new Professor[professors.length + 1];
 		System.arraycopy(professors, 0, newProfessor, 0, professors.length);
 		newProfessor[professors.length] = professor;
 		return newProfessor;
+	}
+
+	private Student [] deleteStudent(int index) {
+		Student [] newStudents = new Student[students.length - 1];
+		System.arraycopy(students, 0, newStudents, 0,index);
+		System.arraycopy(students, index + 1, newStudents, index, students.length - index - 1);
+		return newStudents;
+	}
+
+	private Professor [] deleteProfessor(int index) {
+		Professor [] newProfessors = new Professor[professors.length - 1];
+		System.arraycopy(professors, 0, newProfessors, 0,index);
+		System.arraycopy(professors, index + 1, newProfessors, index, professors.length - index - 1);
+		return newProfessors;
+	}
+
+	private Student [] editStudent(int index, Student student) {
+		students[index] = student;
+		return students;
+	}
+
+	private Professor [] editProfessor(int index, Professor professor) {
+		professors[index] = professor;
+		return professors;
+	}
+
+	private int getIndexOfSearchedHumanByName(Human [] people ,String name ) {
+		// the name contain name + surname divided by space, if there are similar names, the left ones will be changed. If no students found, will return -1
+		for (int i = 0; i < people.length; i++) {
+			if (people[i].getName().equals(name)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 }

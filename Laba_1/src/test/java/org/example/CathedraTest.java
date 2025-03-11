@@ -23,5 +23,28 @@ public class CathedraTest  {
         cathedra.addStudent(studentA);
         cathedra.addProfessor(ProfessorA);
         cathedra.orderedProfessorsAlphabetically();
+        System.out.println("before delete");
+        cathedra.printHuman(cathedra.getStudents());
+        cathedra.deletedStudents("a d");
+        System.out.println("Deleted");
+        cathedra.printHuman(cathedra.getStudents());
+
+        System.out.println("before delete");
+        cathedra.printHuman(cathedra.getProfessors());
+        cathedra.deletedProfessor("d");
+        System.out.println("Deleted");
+        cathedra.printHuman(cathedra.getProfessors());
+
+        cathedra.editedProfessor("a", new Professor("Dima", "DIma", "Dima", 45, "METH", "FI"));
+        cathedra.editedProfessor("a d", new Professor("Dima", "DIma", "Dima", 45, "METH", "FI"));
+
+
+
+        System.out.println("before delete");
+        cathedra.printHuman(cathedra.getProfessors());
+        cathedra.deletedProfessor("a d");
+        System.out.println("Deleted");
+        cathedra.printHuman(cathedra.getProfessors());
+
     }
 }
