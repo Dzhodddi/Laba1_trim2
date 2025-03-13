@@ -66,18 +66,20 @@ public final class DataInput {
 
     }
 	
-	public static String validateString(String str, int minimalLen) {
+	public static String validateString(String wr, int minimalLen) throws IOException {
+        String str = DataInput.getString(wr);
 		if (str.length() < minimalLen ) {
 			System.out.println("Wrong input, name contains atleast 4 chars");
-			throw new IllegalArgumentException();
+			return validateString(wr, minimalLen);
 		}
 		return str;
 	}
 	
-	public static int validateNumber(int number, int lower, int higher) {
+	public static int validateNumber(String wr, int lower, int higher) {
+        int number = DataInput.getInt(wr);
 		if (number < lower || number > higher) {
 			System.out.println("Number is out of bounds");
-			throw new IllegalArgumentException();
+            return validateNumber(wr, lower, higher);
 		}
 		return number;
 	}

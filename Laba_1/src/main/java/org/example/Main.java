@@ -44,6 +44,12 @@ class Human {
 		return age;
 	}
 
+	public String getSurname() {return surname; }
+
+	public String getMiddlename() {return middlename; }
+
+	public String getFirstName() {return name; }
+
 	public boolean toEquals(Human human) {
 		return human.getFullName().equals(getFullName());
 	}
