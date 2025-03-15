@@ -4,11 +4,7 @@ import java.io.IOException;
 // test giy
 public class Tester {
     public static void main(String[] args) throws IOException {
-        //Cathedra cathedra = new Cathedra();
-        int amountOfStudents = 0;//лічильник чи обмеження?
-        int amountOfProfessors = 0;//лічильник чи обмеження?
-        Student student [] = new Student[amountOfStudents];
-        Professor professor[] = new Professor[amountOfProfessors];
+
 
         int a = DataInput.getInt("Start?(0/1) ");
         while(a != 0 && a != 1){
@@ -18,11 +14,9 @@ public class Tester {
             System.out.println("The program is finished.");
             return;
         }
+        University university = createUniversity();
 
-        String universityName = DataInput.getString("Write down a University name: ");
-        //University university = new University(universityName);
-        System.out.println("\n\t** created new University called \""+universityName+"\" **");
-
+        System.out.println("\n\t\t** University "+university.getName()+" created **");
         while(true){
 
             showOptions();
@@ -42,10 +36,27 @@ public class Tester {
                     }
                     switch(a){
                         case 1:
+                            university.addFaculty();
+                            university.showFacultiesList();
                             break;
                         case 2:
+                            university.showFacultiesList();
+                            int num = DataInput.getInt("Choose a faculty: ");
+                            while(num < 1 || num > university.getFaculties().length){
+                                num = DataInput.getInt("Wrong choice, choose a faculty: ");
+                            }
+                            university.deleteFaculty(num-1);
+                            university.showFacultiesList();
                             break;
                         case 3:
+                            university.showFacultiesList();
+                            num = DataInput.getInt("Choose a faculty: ");
+                            while(num < 1 || num > university.getFaculties().length){
+                                num = DataInput.getInt("Wrong choice, choose a faculty: ");
+                            }
+                            String name = DataInput.getString("Write down a new faculty name: ");
+                            university.editFaculty(num-1, name);
+                            university.showFacultiesList();
                             break;
                     }
                     break;
@@ -59,12 +70,35 @@ public class Tester {
                     while(a < 1 || a > 3){
                         a = DataInput.getInt("Try again, choose an option:(1-3) ");
                     }
+                    university.showFacultiesList();
+                    int num = DataInput.getInt("Choose a faculty: ");
+                    while(num < 1 || num > university.getFaculties().length){
+                        num = DataInput.getInt("Wrong choice, choose a faculty: ");
+                    }
+                    Faculty faculty = university.facultyAtNumber(num);
                     switch(a){
                         case 1:
+                            faculty.addCathedra();
+                            faculty.showCathedraeList();
                             break;
                         case 2:
+                            faculty.showCathedraeList();
+                            num = DataInput.getInt("Choose a cathedra: ");
+                            while(num < 1 || num > university.getFaculties().length){
+                                num = DataInput.getInt("Wrong choice, choose a cathedra: ");
+                            }
+                            faculty.deleteCathedra(num-1);
+                            faculty.showCathedraeList();
                             break;
                         case 3:
+                            faculty.showCathedraeList();
+                            num = DataInput.getInt("Choose a cathedra: ");
+                            while(num < 1 || num > university.getFaculties().length){
+                                num = DataInput.getInt("Wrong choice, choose a cathedra: ");
+                            }
+                            String name = DataInput.getString("Write down a new cathedra name: ");
+                            faculty.editCathedra(num-1, name);
+                            faculty.showCathedraeList();
                             break;
                     }
                     break;
@@ -74,12 +108,7 @@ public class Tester {
                         a = DataInput.getInt("Try again, student or professor:(0/1) ");
                     }
                     switch(a){
-                        case 1:
-                            //Cathedra.showCathedraList();
-                            a = DataInput.getInt("Choose an cathedra: ");
-//                            while(a < 1 || a > //Cathedra.getAmountOfCathedras){
-//                                a = DataInput.getInt("Try again, choose a cathedra: ");
-//                            }
+                        case 0:
                             System.out.println("\nOptions:" +
                                     "\n\t1 - додати студента до кафедри" +
                                     "\n\t2 - видалити студента з кафедри" +
@@ -98,12 +127,7 @@ public class Tester {
                                     break;
                             }
                             break;
-                        case 2:
-                            //Cathedra.showCathedraList();
-                            a = DataInput.getInt("Choose an cathedra: ");
-//                            while(a < 1 || a > //Cathedra.getAmountOfCathedras){
-//                                a = DataInput.getInt("Try again, choose a cathedra: ");
-//                            }
+                        case 1:
                             System.out.println("\nOptions:" +
                                     "\n\t1 - додати викладача до кафедри" +
                                     "\n\t2 - видалити викладача з кафедри" +
@@ -130,23 +154,34 @@ public class Tester {
                         a = DataInput.getInt("Try again, student or professor:(0/1) ");
                     }
                     switch(a){
-                        case 1:
+                        case 0:
                             break;
-                        case 2:
+                        case 1:
                             break;
                     }
                     break;
                 case 5:
+                    Student[] students = University.selectionSortByYear(university.allUniversityStudents());
+                    University.printAllStudents(students);
                     break;
                 case 6:
+                    university.showFacultiesList();
+                    num = DataInput.getInt("Choose a faculty: ");
+                    while(num < 1 || num > university.getFaculties().length){
+                        num = DataInput.getInt("Wrong choice, choose a faculty: ");
+                    }
+                    Faculty chosen = university.facultyAtNumber(num);
                     a = DataInput.getInt("Student or professor:(0/1) ");
                     while(a != 0 && a != 1){
                         a = DataInput.getInt("Try again, student or professor:(0/1) ");
                     }
+
                     switch(a){
-                        case 1:
+                        case 0:
+                            University.printAllStudents(Faculty.selectionSortStudentsAlphabetically(chosen.allFacultyStudents()));
                             break;
-                        case 2:
+                        case 1:
+                            University.printAllProfessors(Faculty.selectionSortProfessorsAlphabetically(chosen.allFacultyProfessors()));
                             break;
                     }
                     break;
@@ -169,7 +204,7 @@ public class Tester {
                     //all students
                     break;
                 case 10:
-                    //Cathedra.showCathedraList
+                    //showCathedraList
                     //choose cathedra
                     //alphabetical students
                     break;
@@ -243,6 +278,33 @@ public class Tester {
             System.out.println("Professor created");
         }
         return new Cathedra(name, students, professors);
+    }
+
+    private static Faculty createFaculty() throws IOException{
+        String name = DataInput.getString("Write down a faculty name: ");
+        int amountOfCathedrae = DataInput.validateNumber("Write down an amount of Cathedrae: ", 1, 10);
+        Cathedra [] cathedrae = new Cathedra[amountOfCathedrae];
+        System.out.println("Set Cathedrae: ");
+        for (int i = 0; i < amountOfCathedrae; i++){
+            Cathedra cathedra = createCathedra(name);
+            cathedrae[i] = cathedra;
+            System.out.println("\n\t\t** Cathedra created **");
+        }
+        return new Faculty(name, cathedrae);
+    }
+
+    private static University createUniversity() throws IOException{
+        String name = DataInput.getString("Write down a university name: ");
+
+        int amountOfFaculties = DataInput.validateNumber("Write down an amount of Faculties: ", 1, 20);
+        Faculty[] faculties = new Faculty[amountOfFaculties];
+        System.out.println("Set Faculties: ");
+        for (int i = 0; i < amountOfFaculties; i++){
+            Faculty faculty = createFaculty();
+            faculties[i] = faculty;
+            System.out.println("\n\t\t** Faculty created **");
+        }
+        return new University(name, faculties);
     }
 }
 

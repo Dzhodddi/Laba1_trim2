@@ -15,6 +15,8 @@ package org.example;
 
 */
 
+import java.io.IOException;
+
 class Human {
 	private String name;
 	private String surname;
@@ -132,36 +134,7 @@ class Student extends Human{
 		return super.toString() + ". I'm studying at " + cathedra + " at cathedra " + cathedra + " on " + year + " year.";
 	}
 }
-//--------------------------------------------------------------
-// в класі University
-//
-//private static int size = 1;
-//
-//private String[] employance = new String[1];
-//private Faculty[] faculty = new Faculty[1];
-//private Cathedra[] cathedra = new Cathedra[1];
-//private ...
-//+get/set
-//
-//employance задається з main
-//
-/*public void setData(String employance, String faculty, String cathedra, int year, int group, String name, String sname, String mname){
-//
-	tempEmp = Arrays.copyOf(this.employance, this.employance.length+1);
-	setEmployance(tempEmp);
-	tempFaculty = Arrays.copyOf(this.faculty, this.faculty.length+1);
-	setFaculty(tempFaculty);
-//
-	...6 times
-//
-	this.employance[size-1] = employance;
-	this.faculty[size-1] = faculty;
-	this.cathedra[size-1] = cathedra;
-	...5 times
-//
-	size++
-}*/
-//--------------------------------------------------------------
+
 	
 class Cathedra {
 	private String name;
@@ -322,41 +295,350 @@ class Cathedra {
 		return -1;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setStudents(Student[] students) {
+		this.students = students;
+	}
+
+	public void setProfessors(Professor[] professors) {
+		this.professors = professors;
+	}
 }
 
+class Faculty {
+	private String name;
+	private Cathedra [] cathedrae;
 
-//class Faculty {
-//	private String name;
-//	private Cathedra [] cathedrae;
-//	Faculty(String name) {
-//		this.name = name;
-//	}
-//
-//	public Cathedra [] getCathedrae() {
-//		return cathedrae;
-//	}
-//
-//	public int amountOfStudents() {
-//		int counter = 0;
-//		for (Cathedra cathedra : cathedrae) {
-//			counter += cathedra.amountOfStudents();
-//		}
-//		return counter;
-//	}
-//}
+	Faculty(String name, Cathedra [] cathedrae) {
+		this.name = name;
+		this.cathedrae = cathedrae;
+	}
+
+	public void showCathedraeList(){
+		System.out.println("\n\t\t ** Cathedrae Of University: **");
+		for(int i = 0; i < cathedrae.length; i++){
+			System.out.println("\t - "+(i+1)+" cathedra is "+ cathedrae[i].getName());
+		}
+	}
+
+	public Student[] allFacultyStudents(){
+		int counter = 0;
+
+        for (Cathedra value : this.cathedrae) {
+            counter += value.amountOfStudents();
+        }
+
+		Student[] students = new Student[counter];
+		int index = 0;
+        for (Cathedra cathedra : this.cathedrae) {
+            Student[] cathedraStudents = cathedra.getStudents();
+            for (Student cathedraStudent : cathedraStudents) {
+                students[index] = cathedraStudent;
+                index++;
+            }
+        }
+
+		return students;
+	}
+
+	public Professor[] allFacultyProfessors(){
+		int counter = 0;
+
+		for (Cathedra value : this.cathedrae) {
+			counter += value.amountOfProfessors();
+		}
+
+		Professor[] professors = new Professor[counter];
+		int index = 0;
+		for (Cathedra cathedra : this.cathedrae) {
+			Professor[] cathedraProfessors = cathedra.getProfessors();
+			for (Professor cathedraProfessor : cathedraProfessors) {
+				professors[index] = cathedraProfessor;
+				index++;
+			}
+		}
+
+		return professors;
+	}
+
+	public static Student[] selectionSortStudentsAlphabetically(Student [] students) {
+		int x = students.length;
+
+		for (int i = 0; i < x - 1; i++) {
+			int min_idx = i;
+
+			for (int j = i + 1; j < x; j++) {
+
+				if (compare(students[j].getName(), students[min_idx].getName()) < 0) {
+					min_idx = j;
+				}
+			}
+
+			if (min_idx != i) {
+				Student temp = students[i];
+				students[i] = students[min_idx];
+				students[min_idx] = temp;
+			}
+		}
+		return students;
+	}
+
+	public static Professor[] selectionSortProfessorsAlphabetically(Professor [] professors) {
+		int x = professors.length;
+
+		for (int i = 0; i < x - 1; i++) {
+			int min_idx = i;
+
+			for (int j = i + 1; j < x; j++) {
+
+				if (compare(professors[j].getName(), professors[min_idx].getName()) < 0) {
+					min_idx = j;
+				}
+			}
+
+			if (min_idx != i) {
+				Professor temp = professors[i];
+				professors[i] = professors[min_idx];
+				professors[min_idx] = temp;
+			}
+		}
+		return professors;
+	}
 
 
 
-//class University {
-//	private String name;
-//	private Faculty [] faculties;
-//	private int amountOfStudents = 0;
-//	private Student [] students;
-//	private Professor [] professors;
-//	University(String name) {
-//		this.name = name;
-//	}
-//
+	private static int compare(String a, String b) {
+		int minLength = Math.min(a.length(), b.length());
+
+		for (int i = 0; i < minLength; i++) {
+			char charA = Character.toUpperCase(a.charAt(i));
+			char charB = Character.toUpperCase(b.charAt(i));
+
+			if (charA != charB) {
+				return charA - charB;
+			}
+		}
+		return a.length() - b.length();
+	}
+
+	public void addCathedra() throws IOException {
+		Cathedra[] cathedrae = new Cathedra[this.cathedrae.length+1];
+		for(int i = 0; i < this.cathedrae.length; i++){
+			cathedrae[i] = this.cathedrae[i];
+		}
+		String name = DataInput.getString("Input cathedra' name: ");
+		int amountOfStudents = DataInput.validateNumber("Input amount of students: ", 1, 100);
+		int amountOfProfessors = DataInput.validateNumber("Input amount of professors: ", 1, 100);
+		Student [] students = new Student[amountOfStudents];
+		Professor [] professors = new Professor[amountOfProfessors];
+		cathedrae[this.cathedrae.length+1] = new Cathedra(name, students, professors);
+		System.out.println("\n\t\t** Cathedra "+name+" created **");
+	}
+	public void editCathedra(int index, String name){
+		cathedrae[index].setName(name);
+		System.out.println("\n\t\t ** Name Of The Cathedra Successfully Changed ** \n");
+	}
+
+	public void deleteCathedra(int index) throws IOException{
+		cathedrae[index].setStudents(null);
+		cathedrae[index].setProfessors(null);
+		cathedrae[index] = null;
+		rebuildCathedraList();
+		System.out.println("\n\t\t ** Cathedra Deleted Successfully ** \n");
+	}
+
+	private void rebuildCathedraList(){
+		Cathedra[] cathedrae = new Cathedra[this.cathedrae.length-1];
+		for(int i = 0, j = 0; i < this.cathedrae.length; i++){
+			if(cathedrae[i] != null){
+				this.cathedrae[j] = cathedrae[i];
+				j++;
+			}
+		}
+	}
+
+	public Cathedra cathedraAtIndex(int index){
+		return cathedrae[index];
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Cathedra [] getCathedrae() {
+		return cathedrae;
+	}
+
+	public void setCathedrae(Cathedra [] cathedra){
+		this.cathedrae = cathedra;
+	}
+	public int amountOfStudents(){
+		int counter = 0;
+		for (Cathedra cathedra : cathedrae) {
+			counter += cathedra.amountOfStudents();
+		}
+		return counter;
+	}
+
+	public int amountOfProfessors(){
+		int counter = 0;
+		for (Cathedra cathedra : cathedrae) {
+			counter += cathedra.amountOfProfessors();
+		}
+		return counter;
+	}
+}
+
+class University {
+	private String name;
+	private Faculty [] faculties;
+
+	University(String name, Faculty[] faculties) {
+		this.name = name;
+		this.faculties = faculties;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void showFacultiesList(){
+		System.out.println("\n\t\t ** Faculties Of University: **\n");
+		for(int i = 0; i < faculties.length; i++){
+			System.out.println("\t - "+(i+1)+" faculty is "+ faculties[i].getName());
+		}
+	}
+
+	public void addFaculty() throws IOException {
+		Faculty[] faculties = new Faculty[this.faculties.length+1];
+        System.arraycopy(this.faculties, 0, faculties, 0, this.faculties.length);
+		String name = DataInput.getString("Input cathedra' name: ");
+		int amountOfCathedrae = DataInput.validateNumber("Input amount of cathedrae: ", 1, 10);
+		Cathedra[] cathedrae = new Cathedra[amountOfCathedrae];
+		faculties[this.faculties.length+1] = new Faculty(name, cathedrae);
+		System.out.println("\n\t\t** Faculty "+name+" created **");
+	}
+	public void editFaculty(int index, String name) throws IOException {
+		String temp = faculties[index].getName();
+		faculties[index].setName(name);
+		System.out.println("\n\t\t ** Name Of The "+temp+" Faculty Successfully Changed To "+name+"** \n");
+	}
+
+	public void deleteFaculty(int index) throws IOException {
+		for(int i = 0; i < faculties[index].getCathedrae().length; i++){
+			faculties[index].deleteCathedra(i);
+		}
+		faculties[index] = null;
+		System.out.println("\n\t\t ** Faculty Deleted Successfully ** \n");
+		rebuildFacultyList();
+	}
+
+	private void rebuildFacultyList(){
+		Faculty[] faculties = new Faculty[this.faculties.length-1];
+		for(int i = 0, j = 0; i < this.faculties.length; i++){
+			if(faculties[i] != null){
+				this.faculties[j] = faculties[i];
+				j++;
+			}
+		}
+	}
+
+	public Student[] allUniversityStudents(){
+		int counter = 0;
+
+        for (Faculty value : this.faculties) {
+			counter += value.amountOfStudents();
+        }
+
+		Student[] students = new Student[counter];
+		int index = 0;
+        for (Faculty faculty : this.faculties) {
+            Student[] facultyStudents = faculty.allFacultyStudents();
+            for (Student facultyStudent : facultyStudents) {
+                students[index] = facultyStudent;
+                index++;
+            }
+        }
+		return students;
+	}
+
+	public Professor[] allUniversityProfessors(){
+		int counter = 0;
+
+		for (Faculty value : this.faculties) {
+			counter += value.amountOfProfessors();
+		}
+
+		Professor[] professors = new Professor[counter];
+		int index = 0;
+		for (Faculty faculty : this.faculties) {
+			Professor[] facultyProfessors = faculty.allFacultyProfessors();
+			for (Professor facultyProfessor : facultyProfessors){
+				professors[index] = facultyProfessor;
+				index++;
+			}
+		}
+
+		return professors;
+	}
+
+	public Faculty[] getFaculties() {
+		return faculties;
+	}
+
+	public void setFaculties(Faculty[] faculties) {
+		this.faculties = faculties;
+	}
+
+
+
+	public Faculty facultyAtNumber(int num){
+		return faculties[num-1];
+	}
+
+	public static Student[] selectionSortByYear(Student[] students){
+		int x = students.length;
+		for (int i = 0; i < x - 1; i++) {
+
+			int min_idx = i;
+
+			for (int j = i + 1; j < x; j++) {
+				if (students[j].getYear() < students[min_idx].getYear())
+					min_idx = j;
+			}
+			Student temp = students[i];
+			students[i] = students[min_idx];
+			students[min_idx] = temp;
+		}
+		return students;
+	}
+
+	public static void printAllStudents(Student[] students){
+		for(int i = 0; i < students.length; i++){
+			System.out.println((i+1)+". "+students[i].getName());
+		}
+	}
+
+	public static void printAllProfessors(Professor[] professors){
+		for(int i = 0; i < professors.length; i++){
+			System.out.println((i+1)+". "+professors[i].getName());
+		}
+	}
 //	public void findStudent(String name) {
 //		for (Student student : students) {
 //			if (student.getName().equals(name)) {
@@ -396,7 +678,7 @@ class Cathedra {
 //			}
 //		}
 //	}
-//
-//
-//}
+
+
+}
 
