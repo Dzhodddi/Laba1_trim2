@@ -106,49 +106,94 @@ public class Tester {
                     }
                     break;
                 case 3:
-                    a = DataInput.getInt("Student or professor:(0/1) ");
-                    while(a != 0 && a != 1){
-                        a = DataInput.getInt("Try again, student or professor:(0/1) ");
-                    }
+                    a = DataInput.validateNumber("Student or professor:(0/1) ",0, 1);
                     switch(a){
+
                         case 0:
+                        {
                             System.out.println("\nOptions:" +
                                     "\n\t1 - додати студента до кафедри" +
                                     "\n\t2 - видалити студента з кафедри" +
                                     "\n\t3 - редагувати студента на кафедрі");
 
-                            a = DataInput.getInt("Choose an option:(1-3) ");
-                            while(a < 1 || a > 3){
-                                a = DataInput.getInt("Try again, choose an option:(1-3) ");
+                            a = DataInput.validateNumber("Choose an option:(1-3) ",1, 3);
+                            university.showFacultiesList();
+                            if (university.getFaculties().length == 0){
+                                break;
                             }
+                            num = DataInput.validateNumber("Choose a faculty: ", 1, university.getFaculties().length);
+                            Faculty chosen = university.facultyAtNumber(num);
+                            chosen.showCathedraeList();
+                            if (chosen.getCathedrae().length == 0){
+                                break;
+                            }
+                            int cathedra = DataInput.validateNumber("Choose a cathedra: ", 1, chosen.getCathedrae().length);
+                            Cathedra chosenCathedra = chosen.cathedraAtNumber(cathedra);
                             switch(a){
                                 case 1:
-                                    break;
+                                {
+                                    Student newStudent = createStudent(chosen.getName(), chosenCathedra.getName());
+                                    chosenCathedra.addStudent(newStudent);
+                                }
+
+                                break;
                                 case 2:
+                                    String name = DataInput.getString("Input student's name and surname divided by space");
+                                    chosenCathedra.deletedStudents(name);
                                     break;
                                 case 3:
-                                    break;
+                                {
+                                    Student newStudent = createStudent(chosen.getName(), chosenCathedra.getName());
+                                    String nameOfEditedStudent = DataInput.getString("Input student's name and surname divided by space");
+                                    chosenCathedra.editedStudent(nameOfEditedStudent, newStudent);
+                                }
+                                break;
                             }
                             break;
+                        }
+
                         case 1:
+                        {
                             System.out.println("\nOptions:" +
                                     "\n\t1 - додати викладача до кафедри" +
                                     "\n\t2 - видалити викладача з кафедри" +
                                     "\n\t3 - редагувати викладачі на кафедрі");
 
-                            a = DataInput.getInt("Choose an option:(1-3) ");
-                            while(a < 1 || a > 3){
-                                a = DataInput.getInt("Try again, choose an option:(1-3) ");
+                            a = DataInput.validateNumber("Choose an option:(1-3) ",1, 3);
+                            university.showFacultiesList();
+                            if (university.getFaculties().length == 0){
+                                break;
                             }
+                            num = DataInput.validateNumber("Choose a faculty: ", 1, university.getFaculties().length);
+                            Faculty chosen = university.facultyAtNumber(num);
+                            chosen.showCathedraeList();
+                            if (chosen.getCathedrae().length == 0){
+                                break;
+                            }
+                            int cathedra = DataInput.validateNumber("Choose a cathedra: ", 1, chosen.getCathedrae().length );
+                            Cathedra chosenCathedra = chosen.cathedraAtNumber(cathedra);
                             switch(a){
                                 case 1:
-                                    break;
+                                {
+                                    Professor newProfessor = createProfessor(chosen.getName(), chosenCathedra.getName());
+                                    chosenCathedra.addProfessor(newProfessor);
+                                }
+                                break;
                                 case 2:
+                                    String name = DataInput.getString("Input professor's name and surname divided by space");
+                                    chosenCathedra.deletedProfessor(name);
                                     break;
                                 case 3:
-                                    break;
+                                {
+                                    Professor newProfessor = createProfessor(chosen.getName(), chosenCathedra.getName());
+                                    String nameOfEditedStudent = DataInput.getString("Input professor's name and surname divided by space");
+                                    chosenCathedra.editedProfessor(nameOfEditedStudent, newProfessor);
+                                }
+                                break;
                             }
                             break;
+                        }
+
                     }
                     break;
                 case 4:
@@ -192,6 +237,7 @@ public class Tester {
                     University.printAllStudentsWithCourse(students);
                     break;
                 case 6:
+                    {
                     university.showFacultiesList();
                     num = DataInput.getInt("Choose a faculty: ");
                     while(num < 1 || num > university.getFaculties().length){
@@ -212,26 +258,88 @@ public class Tester {
                             break;
                     }
                     break;
+                }
+
                 case 7:
-                    break;
+                    {
+                        university.showFacultiesList();
+                        if (university.getFaculties().length == 0){
+                            break;
+                        }
+                        num = DataInput.validateNumber("Choose a faculty: ", 1, university.getFaculties().length);
+                        Faculty chosen = university.facultyAtNumber(num);
+                        chosen.showCathedraeList();
+                        if (chosen.getCathedrae().length == 0){
+                            break;
+                        }
+                        int cathedra = DataInput.validateNumber("Choose a cathedra: ", 1, chosen.getCathedrae().length);
+                        Cathedra chosenCathedra = chosen.cathedraAtNumber(cathedra);
+                        chosenCathedra.orderedStudentsByYear();
+                        break;
+                    }
+
                 case 8:
-                    a = DataInput.getInt("Student or professor:(0/1) ");
-                    while(a != 0 && a != 1){
-                        a = DataInput.getInt("Try again, student or professor:(0/1) ");
+                    {
+                    university.showFacultiesList();
+                    if (university.getFaculties().length == 0){
+                        break;
                     }
-                    switch(a){
+                    num = DataInput.validateNumber("Choose a faculty: ", 1, university.getFaculties().length);
+                    Faculty chosen = university.facultyAtNumber(num);
+                    chosen.showCathedraeList();
+                    if (chosen.getCathedrae().length == 0){
+                        break;
+                    }
+                    int cathedra = DataInput.validateNumber("Choose a cathedra: ", 1, chosen.getCathedrae().length);
+                    Cathedra chosenCathedra = chosen.cathedraAtNumber(cathedra);
+                    a = DataInput.validateNumber("Student or professor:(0/1) ", 0, 1);
+                    switch (a) {
+                        case 0:
+                            chosenCathedra.orderedStudentsAlphabetically();
+                            break;
                         case 1:
-                            break;
-                        case 2:
+                            chosenCathedra.orderedProfessorsAlphabetically();
                             break;
                     }
                     break;
+                }
                 case 9:
-
-                    break;
+                    {
+                        university.showFacultiesList();
+                        if (university.getFaculties().length == 0){
+                            break;
+                        }
+                        num = DataInput.validateNumber("Choose a faculty: ", 1, university.getFaculties().length);
+                        Faculty chosen = university.facultyAtNumber(num);
+                        chosen.showCathedraeList();
+                        if (chosen.getCathedrae().length == 0){
+                            break;
+                        }
+                        int cathedra = DataInput.validateNumber("Choose a cathedra: ", 1, chosen.getCathedrae().length);
+                        int year = DataInput.getInt("Input year: ");
+                        Cathedra chosenCathedra = chosen.cathedraAtNumber(cathedra);
+                        chosenCathedra.selectStudentsByYear(year);
+                        break;
+                    }
                 case 10:
+                    {
+                        university.showFacultiesList();
+                        if (university.getFaculties().length == 0){
+                            break;
+                        }
+                        num = DataInput.validateNumber("Choose a faculty: ", 1, university.getFaculties().length);
+                        Faculty chosen = university.facultyAtNumber(num);
+                        chosen.showCathedraeList();
+                        if (chosen.getCathedrae().length == 0){
+                            break;
+                        }
+                        int cathedra = DataInput.validateNumber("Choose a cathedra: ", 1, chosen.getCathedrae().length);
+                        int year = DataInput.getInt("Input year: ");
+                        Cathedra chosenCathedra = chosen.cathedraAtNumber(cathedra);
+                        chosenCathedra.orderedStudentsAlphabeticallyInSelectedYear(year);
+                        break;
+                    }
 
-                    break;
             }
 
 

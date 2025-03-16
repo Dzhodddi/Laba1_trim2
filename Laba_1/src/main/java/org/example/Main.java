@@ -131,7 +131,7 @@ class Student extends Human{
 	}
 
 	public String toString(){
-		return super.toString() + ". I'm studying at " + cathedra + " at cathedra " + cathedra + " on " + year + " year.";
+		return super.toString() + ". I'm studying at " + cathedra + "on faculty " + faculty + " on " + year + " year.";
 	}
 }
 
@@ -212,6 +212,7 @@ class Cathedra {
 	}
 
 	public void selectStudentsByYear(int year) {
+		System.out.println("Selected students with " +  year + " year");
 		for (Student student : students) {
 			if (student.getYear() == year) {
 				System.out.println(student);
@@ -537,6 +538,10 @@ class Faculty {
 		}
 		return counter;
 	}
+
+	public Cathedra cathedraAtNumber(int number) {
+		return cathedrae[number - 1];
+	}
 }
 
 class University {
@@ -717,7 +722,7 @@ class University {
 		}
 		for(int i = 0; i < students.length; i++){
 			if(students[i] != null)
-				System.out.println((i+1)+". "+students[i].getName()+", "+students[i].getYear());
+				System.out.println((i+1)+". "+students[i]); // fixed here
 		}
 	}
 
