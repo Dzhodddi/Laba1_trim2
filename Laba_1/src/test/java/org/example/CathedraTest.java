@@ -13,38 +13,35 @@ public class CathedraTest  {
         Student [] students = new Student[]{studentA, studentB, studentC, studentA};
         Professor [] professors = new Professor[]{ProfessorA, ProfessorB, ProfessorC};
         Cathedra cathedra = new Cathedra("Meth", students, professors);
-//        cathedra.orderedStudentsByYear();
-//        cathedra.orderedStudentsAlphabeticallyInSelectedYear(4);
-//        cathedra.orderedProfessorsAlphabetically();
-//        cathedra.orderedStudentsAlphabetically();
-//        cathedra.selectStudentsByYear(2);
-//        cathedra.addStudent(studentA);
-//        cathedra.orderedStudentsAlphabetically();
-        cathedra.addStudent(studentA);
-        cathedra.addProfessor(ProfessorA);
-        cathedra.orderedProfessorsAlphabetically();
-        System.out.println("before delete");
-        cathedra.printHuman(cathedra.getStudents());
+        Cathedra cathedra1 = new Cathedra("PE", students, professors);
+        Faculty faculty = new Faculty("FI", new Cathedra[]{cathedra, cathedra1});
+        faculty.showCathedraeList();
+        for (Professor student : faculty.allFacultyProfessors()) {
+            System.out.println(student);
+        }
+        System.out.println("CHANGING");
+        cathedra1.editedProfessor("a d", new Professor("YA CHANGED", "", "", 45, "MEth", "FI"));
         cathedra.deletedStudents("a d");
-        System.out.println("Deleted");
-        cathedra.printHuman(cathedra.getStudents());
+        cathedra.deletedStudents("a d");
+        cathedra.deletedStudents("a t");
+        cathedra1.deletedStudents("a d");
+        for (Professor student : faculty.allFacultyProfessors()) {
+            System.out.println(student);
+        }
+        System.out.println(".");
+        for (Student student : faculty.allFacultyStudents()) {
+            System.out.println(student);
+        }
 
-        System.out.println("before delete");
-        cathedra.printHuman(cathedra.getProfessors());
-        cathedra.deletedProfessor("d");
-        System.out.println("Deleted");
-        cathedra.printHuman(cathedra.getProfessors());
-
-        cathedra.editedProfessor("a", new Professor("Dima", "DIma", "Dima", 45, "METH", "FI"));
-        cathedra.editedProfessor("a d", new Professor("Dima", "DIma", "Dima", 45, "METH", "FI"));
-
-
-
-        System.out.println("before delete");
-        cathedra.printHuman(cathedra.getProfessors());
-        cathedra.deletedProfessor("a d");
-        System.out.println("Deleted");
-        cathedra.printHuman(cathedra.getProfessors());
-
+        cathedra.editedStudent("b d", new Student("а", "а", "q", 18, 2, 6, "MEth", "FI"));
+        cathedra.editedStudent("c d", new Student("а", "б", "q", 18, 2, 6, "MEth", "FI"));
+        System.out.println("EDITED");
+        for (Student student : faculty.allFacultyStudents()) {
+            System.out.println(student);
+        }
+        cathedra.orderedStudentsAlphabetically();
+        System.out.println("f");
+        cathedra1.orderedStudentsAlphabetically();
+        System.out.println("ї".compareTo("ґ"));
     }
 }
