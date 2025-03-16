@@ -43,23 +43,27 @@ public class Tester {
                             break;
                         case 2:
                             university.showFacultiesList();
-                            int num = DataInput.getInt("Choose a faculty: ");
-                            while(num < 1 || num > university.getFaculties().length){
-                                num = DataInput.getInt("Wrong choice, choose a faculty: ");
+                            if(university.getFaculties().length!=0) {
+                                int num = DataInput.getInt("Choose a faculty: ");
+                                while (num < 1 || num > university.getFaculties().length) {
+                                    num = DataInput.getInt("Wrong choice, choose a faculty: ");
+                                }
+                                if (university.getFaculties()[num - 1] != null)
+                                    university.deleteFaculty(num - 1);
+                                university.showFacultiesList();
                             }
-                            if(university.getFaculties()[num-1] != null)
-                                university.deleteFaculty(num-1);
-                            university.showFacultiesList();
                             break;
                         case 3:
                             university.showFacultiesList();
-                            num = DataInput.getInt("Choose a faculty: ");
-                            while(num < 1 || num > university.getFaculties().length){
-                                num = DataInput.getInt("Wrong choice, choose a faculty: ");
+                            if(university.getFaculties().length!=0) {
+                                int num = DataInput.getInt("Choose a faculty: ");
+                                while (num < 1 || num > university.getFaculties().length) {
+                                    num = DataInput.getInt("Wrong choice, choose a faculty: ");
+                                }
+                                String name = DataInput.getString("Write down a new faculty name: ");
+                                university.editFaculty(num - 1, name);
+                                university.showFacultiesList();
                             }
-                            String name = DataInput.getString("Write down a new faculty name: ");
-                            university.editFaculty(num-1, name);
-                            university.showFacultiesList();
                             break;
                     }
                     break;
@@ -86,22 +90,26 @@ public class Tester {
                             break;
                         case 2:
                             faculty.showCathedraeList();
-                            num = DataInput.getInt("Choose a cathedra: ");
-                            while(num < 1 || num > university.getFaculties().length){
-                                num = DataInput.getInt("Wrong choice, choose a cathedra: ");
+                            if(faculty.getCathedrae().length!=0) {
+                                num = DataInput.getInt("Choose a cathedra: ");
+                                while (num < 1 || num > faculty.getCathedrae().length) {
+                                    num = DataInput.getInt("Wrong choice, choose a cathedra: ");
+                                }
+                                faculty.deleteCathedra(num - 1);
+                                faculty.showCathedraeList();
                             }
-                            faculty.deleteCathedra(num-1);
-                            faculty.showCathedraeList();
                             break;
                         case 3:
                             faculty.showCathedraeList();
-                            num = DataInput.getInt("Choose a cathedra: ");
-                            while(num < 1 || num > university.getFaculties().length){
-                                num = DataInput.getInt("Wrong choice, choose a cathedra: ");
+                            if(faculty.getCathedrae().length!=0) {
+                                num = DataInput.getInt("Choose a cathedra: ");
+                                while (num < 1 || num > university.getFaculties().length) {
+                                    num = DataInput.getInt("Wrong choice, choose a cathedra: ");
+                                }
+                                String name = DataInput.getString("Write down a new cathedra name: ");
+                                faculty.editCathedra(num - 1, name);
+                                faculty.showCathedraeList();
                             }
-                            String name = DataInput.getString("Write down a new cathedra name: ");
-                            faculty.editCathedra(num-1, name);
-                            faculty.showCathedraeList();
                             break;
                     }
                     break;
@@ -239,23 +247,25 @@ public class Tester {
                 case 6:
                     {
                     university.showFacultiesList();
-                    num = DataInput.getInt("Choose a faculty: ");
-                    while(num < 1 || num > university.getFaculties().length){
-                        num = DataInput.getInt("Wrong choice, choose a faculty: ");
-                    }
-                    Faculty chosen = university.facultyAtNumber(num);
-                    a = DataInput.getInt("Student or professor:(0/1) ");
-                    while(a != 0 && a != 1){
-                        a = DataInput.getInt("Try again, student or professor:(0/1) ");
-                    }
+                    if(university.getFaculties().length!=0) {
+                        num = DataInput.getInt("Choose a faculty: ");
+                        while (num < 1 || num > university.getFaculties().length) {
+                            num = DataInput.getInt("Wrong choice, choose a faculty: ");
+                        }
+                        Faculty chosen = university.facultyAtNumber(num);
+                        a = DataInput.getInt("Student or professor:(0/1) ");
+                        while (a != 0 && a != 1) {
+                            a = DataInput.getInt("Try again, student or professor:(0/1) ");
+                        }
 
-                    switch(a){
-                        case 0:
-                            University.printAllStudents(Faculty.selectionSortStudentsAlphabetically(chosen.allFacultyStudents()));
-                            break;
-                        case 1:
-                            University.printAllProfessors(Faculty.selectionSortProfessorsAlphabetically(chosen.allFacultyProfessors()));
-                            break;
+                        switch (a) {
+                            case 0:
+                                University.printAllStudents(Faculty.selectionSortStudentsAlphabetically(chosen.allFacultyStudents()));
+                                break;
+                            case 1:
+                                University.printAllProfessors(Faculty.selectionSortProfessorsAlphabetically(chosen.allFacultyProfessors()));
+                                break;
+                        }
                     }
                     break;
                 }
