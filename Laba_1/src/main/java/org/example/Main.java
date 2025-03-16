@@ -322,9 +322,16 @@ class Faculty {
 	}
 
 	public void showCathedraeList(){
-		System.out.println("\n\t\t ** Cathedrae Of University: **");
+		if (cathedrae == null || cathedrae.length == 0) {
+			System.out.println("\n\t\t ** There Are No Cathedrae At The " + name + " Faculty **");
+			return;
+		}
+		System.out.println("\n\t\t ** Cathedrae Of "+name+" Faculty: **");
 		for(int i = 0; i < cathedrae.length; i++){
-			System.out.println("\t - "+(i+1)+" cathedra is "+ cathedrae[i].getName());
+			if(cathedrae[i] != null)
+				System.out.println("\t - "+(i+1)+" cathedra is "+ cathedrae[i].getName());
+			else
+				System.out.println("\t - "+(i+1)+" cathedra is 'not defined'");
 		}
 	}
 
@@ -334,14 +341,19 @@ class Faculty {
         for (Cathedra value : this.cathedrae) {
             counter += value.amountOfStudents();
         }
+		if(counter == 0){
+			System.out.println("The Student List is Empty");
+		}
 
 		Student[] students = new Student[counter];
 		int index = 0;
         for (Cathedra cathedra : this.cathedrae) {
             Student[] cathedraStudents = cathedra.getStudents();
             for (Student cathedraStudent : cathedraStudents) {
-                students[index] = cathedraStudent;
-                index++;
+				if(cathedraStudent!=null) {
+					students[index] = cathedraStudent;
+					index++;
+				}
             }
         }
 
@@ -354,14 +366,19 @@ class Faculty {
 		for (Cathedra value : this.cathedrae) {
 			counter += value.amountOfProfessors();
 		}
+		if(counter == 0){
+			System.out.println("The Professor List is Empty");
+		}
 
 		Professor[] professors = new Professor[counter];
 		int index = 0;
 		for (Cathedra cathedra : this.cathedrae) {
 			Professor[] cathedraProfessors = cathedra.getProfessors();
 			for (Professor cathedraProfessor : cathedraProfessors) {
-				professors[index] = cathedraProfessor;
-				index++;
+				if(cathedraProfessor!=null) {
+					professors[index] = cathedraProfessor;
+					index++;
+				}
 			}
 		}
 
@@ -429,43 +446,65 @@ class Faculty {
 	}
 
 	public void addCathedra() throws IOException {
-		Cathedra[] cathedrae = new Cathedra[this.cathedrae.length+1];
-		for(int i = 0; i < this.cathedrae.length; i++){
-			cathedrae[i] = this.cathedrae[i];
+		if (this.cathedrae == null) {
+			this.cathedrae = new Cathedra[0];
 		}
-		String name = DataInput.getString("Input cathedra' name: ");
-		int amountOfStudents = DataInput.validateNumber("Input amount of students: ", 1, 100);
-		int amountOfProfessors = DataInput.validateNumber("Input amount of professors: ", 1, 100);
-		Student [] students = new Student[amountOfStudents];
-		Professor [] professors = new Professor[amountOfProfessors];
-		cathedrae[this.cathedrae.length+1] = new Cathedra(name, students, professors);
-		System.out.println("\n\t\t** Cathedra "+name+" created **");
+
+		Cathedra[] newCathedrae = new Cathedra[this.cathedrae.length + 1];
+
+		System.arraycopy(this.cathedrae, 0, newCathedrae, 0, this.cathedrae.length);
+
+		String name = DataInput.getString("Input cathedra's name: ");
+
+		Student[] students = new Student[0];
+		Professor[] professors = new Professor[0];
+
+		newCathedrae[this.cathedrae.length] = new Cathedra(name, students, professors);
+		this.cathedrae = newCathedrae;
+
+		System.out.println("\n\t\t** Cathedra " + name + " created **");
 	}
+
 	public void editCathedra(int index, String name){
+		if(cathedrae[index]==null){
+			System.out.println("\n\t\t** Cathedra " + (index+1) + " does not exist **");
+			return;
+		}
 		cathedrae[index].setName(name);
 		System.out.println("\n\t\t ** Name Of The Cathedra Successfully Changed ** \n");
 	}
 
 	public void deleteCathedra(int index) throws IOException{
-		cathedrae[index].setStudents(null);
-		cathedrae[index].setProfessors(null);
+		if (cathedrae == null || index < 0 || index >= cathedrae.length) {
+			System.out.println("\n\t\t ** Wrong Index **");
+			return;
+		}
+		if(cathedrae[index] == null){
+			System.out.println("\n\t\t ** The Cathedra Does Not Exist ** \n");
+			return;
+		}
+		if(cathedrae[index].getStudents() != null)
+			cathedrae[index].setStudents(null);
+		if(cathedrae[index].getProfessors() != null)
+			cathedrae[index].setProfessors(null);
 		cathedrae[index] = null;
 		rebuildCathedraList();
 		System.out.println("\n\t\t ** Cathedra Deleted Successfully ** \n");
 	}
 
-	private void rebuildCathedraList(){
-		Cathedra[] cathedrae = new Cathedra[this.cathedrae.length-1];
-		for(int i = 0, j = 0; i < this.cathedrae.length; i++){
-			if(cathedrae[i] != null){
-				this.cathedrae[j] = cathedrae[i];
+	private void rebuildCathedraList() {
+		if (cathedrae == null) {
+			System.out.println("\n\t\t ** Cathedra List is empty **");
+			return;
+		}
+		Cathedra[] newCathedrae = new Cathedra[this.cathedrae.length - 1];
+		for (int i = 0, j = 0; i < this.cathedrae.length; i++) {
+			if (this.cathedrae[i] != null) {
+				newCathedrae[j] = this.cathedrae[i];
 				j++;
 			}
 		}
-	}
-
-	public Cathedra cathedraAtIndex(int index){
-		return cathedrae[index];
+		this.cathedrae = newCathedrae;
 	}
 
 	public String getName() {
@@ -518,28 +557,50 @@ class University {
 	}
 
 	public void showFacultiesList(){
-		System.out.println("\n\t\t ** Faculties Of University: **\n");
+		if (faculties == null || faculties.length == 0) {
+			System.out.println("\n\t\t ** There Are No Faculties At The "+name+" University. **");
+			return;
+		}
+		System.out.println("\n\t\t ** Faculties Of "+name+" University: **\n");
 		for(int i = 0; i < faculties.length; i++){
 			System.out.println("\t - "+(i+1)+" faculty is "+ faculties[i].getName());
 		}
 	}
-
 	public void addFaculty() throws IOException {
-		Faculty[] faculties = new Faculty[this.faculties.length+1];
-        System.arraycopy(this.faculties, 0, faculties, 0, this.faculties.length);
-		String name = DataInput.getString("Input cathedra' name: ");
-		int amountOfCathedrae = DataInput.validateNumber("Input amount of cathedrae: ", 1, 10);
-		Cathedra[] cathedrae = new Cathedra[amountOfCathedrae];
-		faculties[this.faculties.length+1] = new Faculty(name, cathedrae);
-		System.out.println("\n\t\t** Faculty "+name+" created **");
+		if (this.faculties == null) {
+			this.faculties = new Faculty[0];
+		}
+		Faculty[] newFaculties = new Faculty[this.faculties.length + 1];
+		System.arraycopy(this.faculties, 0, newFaculties, 0, this.faculties.length);
+		String name = DataInput.getString("Input faculty name: ");
+
+		Cathedra[] cathedrae = new Cathedra[0];
+
+		newFaculties[this.faculties.length] = new Faculty(name, cathedrae);
+		this.faculties = newFaculties;
+
+		System.out.println("\n\t\t** Faculty " + name + " created **");
 	}
+
 	public void editFaculty(int index, String name) throws IOException {
+		if(faculties[index]==null){
+			System.out.println("\n\t\t ** Faculty does not exist ** \n");
+			return;
+		}
 		String temp = faculties[index].getName();
 		faculties[index].setName(name);
 		System.out.println("\n\t\t ** Name Of The "+temp+" Faculty Successfully Changed To "+name+"** \n");
 	}
 
 	public void deleteFaculty(int index) throws IOException {
+		if (faculties == null || index < 0 || index >= faculties.length) {
+			System.out.println("\n\t\t ** Wrong index **");
+			return;
+		}
+		if(faculties[index] == null){
+			System.out.println("\n\t\t ** The Faculty Does Not Exist ** \n");
+			return;
+		}
 		for(int i = 0; i < faculties[index].getCathedrae().length; i++){
 			faculties[index].deleteCathedra(i);
 		}
@@ -548,14 +609,19 @@ class University {
 		rebuildFacultyList();
 	}
 
-	private void rebuildFacultyList(){
-		Faculty[] faculties = new Faculty[this.faculties.length-1];
-		for(int i = 0, j = 0; i < this.faculties.length; i++){
-			if(faculties[i] != null){
-				this.faculties[j] = faculties[i];
+	private void rebuildFacultyList() {
+		if(faculties == null){
+			System.out.println("\n\t\t ** Faculty List Is Empty **");
+			return;
+		}
+		Faculty[] faculties = new Faculty[this.faculties.length - 1];
+		for (int i = 0, j = 0; i < this.faculties.length; i++) {
+			if (this.faculties[i] != null) {
+				faculties[j] = this.faculties[i];
 				j++;
 			}
 		}
+		this.faculties = faculties;
 	}
 
 	public Student[] allUniversityStudents(){
@@ -564,7 +630,9 @@ class University {
         for (Faculty value : this.faculties) {
 			counter += value.amountOfStudents();
         }
-
+		if(counter == 0){
+			System.out.println("The Student List is Empty");
+		}
 		Student[] students = new Student[counter];
 		int index = 0;
         for (Faculty faculty : this.faculties) {
@@ -582,6 +650,9 @@ class University {
 
 		for (Faculty value : this.faculties) {
 			counter += value.amountOfProfessors();
+		}
+		if(counter == 0){
+			System.out.println("The Professor List is Empty");
 		}
 
 		Professor[] professors = new Professor[counter];
@@ -629,56 +700,86 @@ class University {
 	}
 
 	public static void printAllStudents(Student[] students){
+		if(students==null){
+			System.out.println("\n\t\t ** A Student List Is Empty **");
+			return;
+		}
 		for(int i = 0; i < students.length; i++){
-			System.out.println((i+1)+". "+students[i].getName());
+			if(students[i] != null)
+				System.out.println((i+1)+". "+students[i].getName());
+		}
+	}
+
+	public static void printAllStudentsWithCourse(Student[] students){
+		if(students==null){
+			System.out.println("\n\t\t ** A Student List Is Empty **");
+			return;
+		}
+		for(int i = 0; i < students.length; i++){
+			if(students[i] != null)
+				System.out.println((i+1)+". "+students[i].getName()+", "+students[i].getYear());
 		}
 	}
 
 	public static void printAllProfessors(Professor[] professors){
+		if(professors==null){
+			System.out.println("\n\t\t ** A Professor List Is Empty **");
+			return;
+		}
 		for(int i = 0; i < professors.length; i++){
 			System.out.println((i+1)+". "+professors[i].getName());
 		}
 	}
-//	public void findStudent(String name) {
-//		for (Student student : students) {
-//			if (student.getName().equals(name)) {
-//				System.out.println(student);
-//			}
-//		}
-//	}
-//
-//	public void findStudents(String name, int year) {
-//		for (Student student : students) {
-//			if (student.getName().equals(name) && student.getYear() == year) {
-//				System.out.println(student);
-//			}
-//		}
-//	}
-//
-//	public void findStudents(String name, int year, int group) {
-//		for (Student student : students) {
-//			if (student.getName().equals(name) && student.getYear() == year && student.getGroup() == group) {
-//				System.out.println(student);
-//			}
-//		}
-//	}
-//
-//	public void findProfessor(String name) {
-//		for (Professor professor : professors) {
-//			if (professor.getName().equals(name)) {
-//				System.out.println(professor);
-//			}
-//		}
-//	}
-//
-//	public void findProfessor(String name, int [] group) {
-//		for (Professor professor : professors) {
-//			if (professor.getName().equals(name)) {
-//				System.out.println(professor);
-//			}
-//		}
-//	}
+	public void findStudent(String name) {
+		boolean found = false;
+		for (Student student : allUniversityStudents()) {
+			if (student.getFullName().equals(name)){
+				System.out.println(student);
+				found = true;
+			}
+		}
+		if(!found){
+			System.out.println("Student not found");
+		}
+	}
 
+	public void findStudentWithCourse(int year) {
+		boolean found = false;
+		for (Student student : allUniversityStudents()){
+			if(student.getYear() == year){
+				System.out.println(student);
+				found = true;
+			}
+		}
+		if(!found){
+			System.out.println("Student not found");
+		}
+	}
 
+	public void findStudentWithGroup(int group) {
+		boolean found = false;
+		for (Student student : allUniversityStudents()) {
+			if (student.getGroup() == group) {
+				System.out.println(student+" My group is "+student.getGroup());
+				found = true;
+			}
+		}
+		if(!found){
+			System.out.println("Student not found");
+		}
+	}
+
+	public void findProfessor(String name) {
+		boolean found = false;
+		for (Professor professor : allUniversityProfessors()) {
+			if (professor.getFullName().equals(name)) {
+				System.out.println(professor);
+				found = true;
+			}
+		}
+		if(!found){
+			System.out.println("Professor not found");
+		}
+	}
 }
 

@@ -6,6 +6,8 @@ public class Tester {
     public static void main(String[] args) throws IOException {
 
 
+
+
         int a = DataInput.getInt("Start?(0/1) ");
         while(a != 0 && a != 1){
             a = DataInput.getInt("Try again, start?(0/1) ");
@@ -14,9 +16,9 @@ public class Tester {
             System.out.println("The program is finished.");
             return;
         }
-        University university = createUniversity();
+       University university = createUniversity();
 
-        System.out.println("\n\t\t** University "+university.getName()+" created **");
+        //System.out.println("\n\t\t** University "+university.getName()+" created **");
         while(true){
 
             showOptions();
@@ -45,7 +47,8 @@ public class Tester {
                             while(num < 1 || num > university.getFaculties().length){
                                 num = DataInput.getInt("Wrong choice, choose a faculty: ");
                             }
-                            university.deleteFaculty(num-1);
+                            if(university.getFaculties()[num-1] != null)
+                                university.deleteFaculty(num-1);
                             university.showFacultiesList();
                             break;
                         case 3:
@@ -155,14 +158,38 @@ public class Tester {
                     }
                     switch(a){
                         case 0:
+                            System.out.println("\nOptions:" +
+                                    "\n\t1 - find student with a full name" +
+                                    "\n\t2 - find students with a year of studying" +
+                                    "\n\t3 - find students with a group");
+                            a = DataInput.getInt("Choose an option:(1-3) ");
+                            while(a < 1 || a > 3){
+                                a = DataInput.getInt("Try again, choose an option:(1-3) ");
+                            }
+                            switch(a){
+                                case 1:
+                                    String name = DataInput.getString("Write down a FULL student's name to find: ");
+                                    university.findStudent(name);
+                                    break;
+                                case 2:
+                                    int year = DataInput.validateNumber("Write down a student's course to find: ", 1, 4);
+                                    university.findStudentWithCourse(year);
+                                    break;
+                                case 3:
+                                    int group = DataInput.validateNumber("Write down a student's group to find: ", 1, 10);
+                                    university.findStudentWithGroup(group);
+                                    break;
+                            }
                             break;
                         case 1:
+                            String name = DataInput.getString("Write down a FULL professor's name to find: ");
+                            university.findProfessor(name);
                             break;
                     }
                     break;
                 case 5:
                     Student[] students = University.selectionSortByYear(university.allUniversityStudents());
-                    University.printAllStudents(students);
+                    University.printAllStudentsWithCourse(students);
                     break;
                 case 6:
                     university.showFacultiesList();
@@ -200,13 +227,10 @@ public class Tester {
                     }
                     break;
                 case 9:
-                    //choose course
-                    //all students
+
                     break;
                 case 10:
-                    //showCathedraList
-                    //choose cathedra
-                    //alphabetical students
+
                     break;
             }
 
