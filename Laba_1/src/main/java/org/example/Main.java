@@ -67,6 +67,8 @@ class Professor extends Human{
 
 	}
 
+
+
 	public String toString() {
 		return super.toString() + " in university at " + cathedra + " cathedra in " + faculty + " faculty"; 
 	}
@@ -79,7 +81,13 @@ class Professor extends Human{
 		return cathedra;
 	}
 
+	public void setFaculty(String faculty) {
+		this.faculty = faculty;
+	}
 
+	public void setCathedra(String cathedra) {
+		this.cathedra = cathedra;
+	}
 }
 
 class Student extends Human{
@@ -118,12 +126,12 @@ class Student extends Human{
 		return faculty;
 	}
 
-	public void setFaculty(String faculty){
-		this.faculty = faculty;
-	}
-
 	public String getCathedra(){
 		return cathedra;
+	}
+
+	public void setFaculty(String faculty){
+		this.faculty = faculty;
 	}
 
 	public void setCathedra(String cathedra){
@@ -131,7 +139,7 @@ class Student extends Human{
 	}
 
 	public String toString(){
-		return super.toString() + ". I'm studying at " + cathedra + "on faculty " + faculty + " on " + year + " year.";
+		return super.toString() + ". I'm studying at cathedra " + cathedra + " on faculty " + faculty + " on " + year + " year.";
 	}
 }
 
@@ -153,6 +161,7 @@ class Cathedra {
 	public void addStudent(Student addedStudent) {
 		students = (appendStudent(addedStudent)).clone();
 	}
+
 
 	public void addProfessor(Professor addedProfessor) {
 		professors = (appendProfessor(addedProfessor)).clone();
@@ -244,6 +253,24 @@ class Cathedra {
 		return students.length;
 	}
 
+	public void changeNameOfFaculty(String name) {
+		for (Student student: students) {
+			student.setFaculty(name);
+		}
+		for (Professor professor: professors) {
+			professor.setFaculty(name);
+		}
+	}
+
+	public void changeNameOfCathedra(String name) {
+		for (Student student: students) {
+			student.setCathedra(name);
+		}
+		for (Professor professor: professors) {
+			professor.setCathedra(name);
+		}
+	}
+
 	public Professor [] getProfessors() { return professors; }
 
 	public int amountOfProfessors() {return  professors.length; }
@@ -320,6 +347,17 @@ class Faculty {
 	Faculty(String name, Cathedra [] cathedrae) {
 		this.name = name;
 		this.cathedrae = cathedrae;
+	}
+
+	public void changeNameOfCathedra(String name, int num) {
+		Cathedra cathedra = cathedraAtNumber(num);
+		cathedra.changeNameOfCathedra(name);
+	}
+
+	public void changeNameOfFaculty(String name) {
+		for (Cathedra cathedra: cathedrae) {
+			cathedra.changeNameOfFaculty(name);
+		}
 	}
 
 	public void showCathedraeList(){
@@ -553,6 +591,11 @@ class University {
 		this.faculties = faculties;
 	}
 
+	public void changeNameOfFaculty(String name, int num) {
+		Faculty faculty = facultyAtNumber(num);
+		faculty.changeNameOfFaculty(name);
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -682,7 +725,6 @@ class University {
 	}
 
 
-
 	public Faculty facultyAtNumber(int num){
 		return faculties[num-1];
 	}
@@ -711,7 +753,7 @@ class University {
 		}
 		for(int i = 0; i < students.length; i++){
 			if(students[i] != null)
-				System.out.println((i+1)+". "+students[i].getName());
+				System.out.println((i+1)+". " + students[i]);
 		}
 	}
 
@@ -732,7 +774,7 @@ class University {
 			return;
 		}
 		for(int i = 0; i < professors.length; i++){
-			System.out.println((i+1)+". "+professors[i].getName());
+			System.out.println((i+1)+". "+professors[i]);
 		}
 	}
 	public void findStudent(String name) {

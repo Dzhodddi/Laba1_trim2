@@ -6,8 +6,6 @@ public class Tester {
     public static void main(String[] args) throws IOException {
 
 
-
-
         int a = DataInput.getInt("Start?(0/1) ");
         while(a != 0 && a != 1){
             a = DataInput.getInt("Try again, start?(0/1) ");
@@ -62,6 +60,7 @@ public class Tester {
                                 }
                                 String name = DataInput.getString("Write down a new faculty name: ");
                                 university.editFaculty(num - 1, name);
+                                university.changeNameOfFaculty(name, num);
                                 university.showFacultiesList();
                             }
                             break;
@@ -108,6 +107,7 @@ public class Tester {
                                 }
                                 String name = DataInput.getString("Write down a new cathedra name: ");
                                 faculty.editCathedra(num - 1, name);
+                                faculty.changeNameOfCathedra(name, num);
                                 faculty.showCathedraeList();
                             }
                             break;
